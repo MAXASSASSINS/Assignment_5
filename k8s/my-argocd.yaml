@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: 'https://github.com/MAXASSASSINS/Assignment_5.git'
     targetRevision: HEAD
-    path: assignments/assignment_5/k8s
+    path: k8s
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: default
