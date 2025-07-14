@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: consumer
-          image: my-consumer:v1
+          image: my-con:v2sumer:v2
           imagePullPolicy: Never
           env:
             - name: REDIS_URL

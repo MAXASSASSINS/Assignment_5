@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: postgres
-          image: my-postgres:v1
+          image: my-po:v2stgres:v2
           imagePullPolicy: Never
           env:
             - name: POSTGRES_USERNAME
