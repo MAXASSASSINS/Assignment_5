@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-consumer
+  template:
+    metadata:
+      labels:
+        app: my-consumer
+    spec:
+      containers:
+        - name: consumer
+          image: my-consumer:v1
+          imagePullPolicy: Never
+          env:
+            - name: REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: REDIS_URL
+            - name: TOPIC_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: TOPIC_NAME
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: KAFKA_BOOTSTRAP_SERVERS
+            - name: GROUP_ID
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: GROUP_ID
