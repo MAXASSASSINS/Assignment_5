@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: producer
-          image: my-producer:v2
+          image: my-producer:v4
           imagePullPolicy: Never
           env:
             - name: REDIS_URL

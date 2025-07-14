@@ -2,38 +2,38 @@
 
 # Usage: ./update-version.sh v2
 
-if [ -z "$1" ]; then
-  echo "❌ Usage: ./update-version.sh <version-tag> (e.g., v2)"
+NEW_VERSION=$1
+FILE_LIST="file-list.txt"
+
+# Check version input
+if [ -z "$NEW_VERSION" ]; then
+  echo "❌ Usage: ./update-version.sh <version>"
+  echo "Example: ./update-version.sh v2"
   exit 1
 fi
 
-NEW_VERSION=$1
-OLD_VERSION_PATTERN=":v[0-9]+"
-
-echo "🔄 Updating all image tags to version: $NEW_VERSION"
-
-# 1. Update all YAMLs in k8s/
-find ./k8s -type f -name "*.yaml" | while read -r file; do
-  if grep -q "image: " "$file"; then
-    sed -i -E "s|(:)v[0-9]+|\1$NEW_VERSION|g" "$file"
-    echo "✅ Updated $file"
-  else
-    echo "ℹ️  Skipped $file (no image tag found)"
-  fi
-done
-
-# 2. Update ci_pipeline.sh
-if [ -f "./ci_pipeline.sh" ]; then
-  sed -i -E "s|(:)v[0-9]+|\1$NEW_VERSION|g" ./ci_pipeline.sh
-  echo "✅ Updated ci_pipeline.sh"
+# Check if filelist.txt exists
+if [ ! -f "$FILE_LIST" ]; then
+  echo "❌ Required file 'filelist.txt' not found!"
+  exit 1
 fi
 
-# 3. Update any other .sh files in root
-for file in ./*.sh; do
-  if [[ "$file" != "./update-version.sh" ]]; then
-    sed -i -E "s|(:)v[0-9]+|\1$NEW_VERSION|g" "$file"
-    echo "✅ Updated $file"
-  fi
-done
+echo "🔄 Updating all :vX tags to :$NEW_VERSION in files listed in $FILE_LIST"
 
-echo "🎉 All image versions updated to $NEW_VERSION"
+# Loop through each line in filelist.txt
+while read -r file; do
+  # Skip empty lines or comments
+  [[ -z "$file" || "$file" =~ ^# ]] && continue
+
+  if [ -f "$file" ]; then
+    if sed -i -E "s|(:)v[0-9]+|\1$NEW_VERSION|g" "$file"; then
+      echo "✅ Updated $file"
+    else
+      echo "❌ Failed to update $file (permission denied?)"
+    fi
+  else
+    echo "⚠️  Skipped $file (not found)"
+  fi
+done < "$FILE_LIST"
+
+echo "🎉 All image versions updated to :$NEW_VERSION"
