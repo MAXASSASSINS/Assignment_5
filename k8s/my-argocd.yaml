@@ -6,7 +6,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/yourname/yourrepo'
+    repoURL: 'https://github.com/MAXASSASSINS/Assignment_5.git'
     targetRevision: HEAD
     path: assignments/assignment_5/k8s
   destination:
